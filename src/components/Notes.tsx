@@ -7,8 +7,9 @@ import { HomeStackNavigationProp } from '../types/navigationTypes'
 
 const Notes = ({ note }: INote) => {
   const navigation = useNavigation<HomeStackNavigationProp>();
+  
   const editNote = () => {
-    navigation.navigate('NewNote', { note });
+    navigation.navigate('NewNote', { note: { note } });
   }
   return (
     <View style={styles.container}>

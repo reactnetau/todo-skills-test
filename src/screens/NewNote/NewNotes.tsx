@@ -9,6 +9,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { HomeStackNavigationProp } from '../../types/navigationTypes';
 import { NewNoteRouteProp } from '../../types/routeProps';
 import uuid from 'react-native-uuid';
+import { INote } from '../../interfaces/INotes';
 
 const NewNotes = () => {
   const dispatch = useDispatch();
@@ -19,33 +20,37 @@ const NewNotes = () => {
   const [openCategory, setOpenCategory] = useState(false);
   const [openClients, setOpenClients] = useState(false);
 
-  const [note, setNote] = useState('');
+  const [noteText, setNoteText] = useState('');
   const [category, setCategory] = useState<string>('');
+
   const [client, setClient] = useState<string>('')
 
-  const categoryItems = categories.map(category => {  return { label: category.name, value: category.name} })
-  const clientItems = clients.map(client => {  return { label: client.name, value: client.name} })
+  const categoriesData = categories.map(category => {  return { label: category.name, value: category.name} })
+  const [categoryItems, setCategoryItems] = useState(categoriesData);
 
+  
+  const clientsData = clients.map(client => {  return { label: client.name, value: client.name} })
+  const [clientItems, setClientsItems] = useState(clientsData);
   useEffect(() => {
     if (routeNote) {
-      setNote(routeNote.note);
-      setCategory(routeNote?.category);
-      setClient(routeNote?.client);
+      setNoteText(routeNote.note.note);
+      setCategory(routeNote.note.category || '');
+      setClient(routeNote.note.client || '');
     }
   }, [])
   const saveNote = () => {
     if (routeNote) {
-      dispatch(editNote({ id: routeNote.id, note, category, client }))
+      dispatch(editNote({ note: { id: routeNote.note.id, note: noteText, category, client }}))
     } else {
-      dispatch(addNote({ id: uuid.v4(), note, category, client }))
+      dispatch(addNote({ note: { id: uuid.v4() as string, note: noteText, category, client }}))
     }
 
     navigation.navigate('Home');
   }
 
   const removeNote = () => {
-    if (note) {
-      dispatch(deleteNote({ id: routeNote.id }));
+    if (routeNote) {
+      dispatch(deleteNote({ note: { id: routeNote.note.id, note: noteText, category, client }}));
       navigation.navigate('Home');
     }
   }
@@ -53,7 +58,7 @@ const NewNotes = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Note</Text>
-      <TextInput placeholderTextColor="black" value={note} placeholder='Add your note...' style={styles.input} onChangeText={(v) => setNote(v)} />
+      <TextInput placeholderTextColor="black" value={noteText} placeholder='Add your note...' style={styles.input} onChangeText={(v) => setNoteText(v)} />
       <Text style={styles.header}>Category</Text>
   
         <DropDownPicker
@@ -63,7 +68,7 @@ const NewNotes = () => {
       items={categoryItems}
       setOpen={setOpenCategory}
       setValue={setCategory}
-      setItems={categoryItems}
+      setItems={setCategoryItems}
       zIndex={2}
     />
     <Text style={styles.header}>Client</Text>
@@ -76,7 +81,7 @@ const NewNotes = () => {
       items={clientItems}
       setOpen={setOpenClients}
       setValue={setClient}
-      setItems={clientItems}
+      setItems={setClientsItems}
     />
     <View style={styles.button} >
       <Button title="Save" color="white" onPress={() => saveNote()}/>

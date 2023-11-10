@@ -5,6 +5,7 @@ import type { RootState } from '../../../store'
 import { useDispatch, useSelector } from 'react-redux'
 import Notes from '../../components/Notes'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { INote } from '../../interfaces/INotes'
 
 const TodoApp = () => {
   const notes = useSelector((state: RootState) => state.notes);
@@ -12,7 +13,7 @@ const TodoApp = () => {
     <View>
       <FlatList 
         data={notes}
-        renderItem={({item}) => <Notes note={item} key={item.id} />}
+        renderItem={({item}) => <Notes note={item.note} key={item.note.id} />}
         ListEmptyComponent={<View style={styles.empty}><Text>No notes found</Text></View>}
       />
     </View>

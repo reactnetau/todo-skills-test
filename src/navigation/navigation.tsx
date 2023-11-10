@@ -12,7 +12,7 @@ const Navigation = () => {
   const navigation = useNavigation<HomeStackNavigationProp>();
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Home" component={TodoApp} options={{ headerTitle: 'Note Taker 3000', headerRight: () => <Button title='New note' onPress={() => navigation.navigate('NewNote')} />}} />
+      <Stack.Screen name="Home" component={TodoApp} options={{ headerTitle: 'Note Taker 3000', headerRight: () => <Button title='New note' onPress={() => navigation.navigate('NewNote', { note: undefined })} />}} />
       <Stack.Screen name="NewNote" component={NewNotes} options={{ headerTitle: 'Add/Edit Note'}} />
     </Stack.Navigator>
   )
