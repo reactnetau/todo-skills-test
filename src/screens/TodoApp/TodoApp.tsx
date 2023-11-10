@@ -8,14 +8,11 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 const TodoApp = () => {
   const notes = useSelector((state: RootState) => state.notes);
-  console.log(notes);
-  const { top } = useSafeAreaInsets()
-  const dispatch = useDispatch()
   return (
     <View>
       <FlatList 
         data={notes}
-        renderItem={({item}) => <Notes note={item} />}
+        renderItem={({item}) => <Notes note={item} key={item.id} />}
         ListEmptyComponent={<View style={styles.empty}><Text>No notes found</Text></View>}
       />
     </View>

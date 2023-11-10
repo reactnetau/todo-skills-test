@@ -1,10 +1,10 @@
 import { View, Text, StyleSheet, TextInput, Button } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import DropDownPicker from 'react-native-dropdown-picker';
-import categories from '../../../data/categories.json';
-import clients from '../../../data/clients.json'
+import categories from '../../data/categories.json';
+import clients from '../../data/clients.json'
 import { useDispatch } from 'react-redux';
-import { addNote, deleteNote, editNote } from '../../../slices/notesSlice';
+import { addNote, deleteNote, editNote } from '../../slices/notesSlice';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { HomeStackNavigationProp } from '../../types/navigationTypes';
 import { NewNoteRouteProp } from '../../types/routeProps';
@@ -13,13 +13,15 @@ import uuid from 'react-native-uuid';
 const NewNotes = () => {
   const dispatch = useDispatch();
   const route = useRoute<NewNoteRouteProp>();
-  const routeNote = route?.params?.note;  const navigation = useNavigation<HomeStackNavigationProp>();
+  const routeNote = route?.params?.note; 
+
+  const navigation = useNavigation<HomeStackNavigationProp>();
   const [openCategory, setOpenCategory] = useState(false);
   const [openClients, setOpenClients] = useState(false);
 
   const [note, setNote] = useState('');
-  const [category, setCategory] = useState<string>(null);
-  const [client, setClient] = useState<string>(null)
+  const [category, setCategory] = useState<string>('');
+  const [client, setClient] = useState<string>('')
 
   const categoryItems = categories.map(category => {  return { label: category.name, value: category.name} })
   const clientItems = clients.map(client => {  return { label: client.name, value: client.name} })
@@ -34,7 +36,6 @@ const NewNotes = () => {
   const saveNote = () => {
     if (routeNote) {
       dispatch(editNote({ id: routeNote.id, note, category, client }))
-      console.log("EDIT")
     } else {
       dispatch(addNote({ id: uuid.v4(), note, category, client }))
     }
@@ -44,7 +45,7 @@ const NewNotes = () => {
 
   const removeNote = () => {
     if (note) {
-      dispatch(deleteNote(note));
+      dispatch(deleteNote({ id: routeNote.id }));
       navigation.navigate('Home');
     }
   }

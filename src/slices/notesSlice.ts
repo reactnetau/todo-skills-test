@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { INote } from '../src/interfaces/INotes'
+import { INote } from '../interfaces/INotes'
 
 export interface NotesState {
   notes: []
@@ -20,14 +20,14 @@ export const notesSlice = createSlice({
       state.notes = newNotes;
     },
     deleteNote: (state, action: PayloadAction<INote>) => {
-      const note = action.payload;
-      const index = state.notes.indexOf(note)
+      const index = state.notes.findIndex(obj => obj.id === action.payload.id);
       state.notes.splice(index, 1);
     },
     editNote: (state, action: PayloadAction<INote>) => {
+      const note = action.payload;
       const array = state.notes;
-      const elementPos = array.map(function(x) {return x.id; }).indexOf(action.payload.id);
-      state.notes[elementPos] = action.payload;
+      const index = state.notes.findIndex(obj => obj.id === action.payload.id);
+      state.notes[index] = action.payload;
     },
   },
 })
